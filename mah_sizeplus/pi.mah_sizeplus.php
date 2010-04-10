@@ -64,7 +64,7 @@ class Mah_sizeplus
 	var $er_root = 'Could not determine a root path';
 	var $er_file = 'Invalid "file" parameter';
 	var $er_url_info = 'Faild parsing url';
-	var $er_not_file = '"loc" parameter is not a file';
+	var $er_not_file = '"file" parameter is not a file';
 	var $er_file_parts = 'Problem with file name and extension';
 	
 	/**

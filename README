@@ -202,3 +202,8 @@ spq_foo1 NOT SET
 spq_foo2 NOT BAZ
 
 ==========================
+
+Notes:
+
+• If you want to see debug output, add a "debug" parameter and set its value to "yes".
+• Optional: You can add the server base path to the "$root_path" variable via the plugin source code and that override the plugin defaults.
