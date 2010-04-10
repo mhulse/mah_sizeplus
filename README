@@ -1,0 +1,204 @@
+==========================
+mah_sizeplus
+==========================
+
+Expression Engine 2.0.x compatible plugin.
+
+http://expressionengine.com/
+
+Installation instructions:
+
+1. Install EE.
+2. Download the "mah_sizeplus" folder.
+3. Upload "mah_sizeplus" folder here: system/expressionengine/third_party/
+
+More info here:
+
+• http://devot-ee.com/add-ons/plugins/sizeplus/
+• http://expressionengine.com/forums/viewthread/52587/
+
+==========================
+
+Usage example #1:
+
+==========================
+
+{exp:mah_sizeplus file="/images/uploads/world-fair.jpg?foo1=bar&foo2=baz"}
+    
+    <p>URL: {sp_url}</p>
+    
+    <p>Root: {sp_root}</p>
+    
+    {if sp_domain != ''}
+        <p>Domain: {sp_domain}</p>
+    {if:else}
+        <p>NO DOMAIN</p>
+    {/if}
+    
+    <p>Base: {sp_base}</p>
+    
+    {if sp_width != ''}
+        <p>Width: {sp_width}</p>
+    {if:else}
+        <p>NO WIDTH</p>
+    {/if}
+    
+    {if sp_height != ''}
+        <p>Height: {sp_height}</p>
+    {if:else}
+        <p>NO HEIGHT</p>
+    {/if}
+    
+    <p>Name: {sp_name}</p>
+    
+    <p>Extension: {sp_ext}</p>
+    
+    {if sp_ratio > 0}
+        <p>Ratio: {sp_ratio}</p>
+    {if:else}
+        <p>RATIO <= 0</p>
+    {/if}
+    
+    {if sp_flash}
+        <p>Show Flash</p>
+    {if:else}
+        <p>NOT FLASH</p>
+    {/if}
+    
+    {if spq_foo1 != ''}
+        <p>{spq_foo1}</p>
+    {if:else}
+        <p>spq_foo1 NOT SET</p>
+    {/if}
+    
+    {if spq_foo2 == 'baz'}
+        <p>{spq_foo2}</p>
+    {if:else}
+        <p>spq_foo2 NOT BAZ</p>
+    {/if}
+    
+{/exp:mah_sizeplus}
+
+==========================
+
+... outputs this:
+
+==========================
+
+URL: /images/uploads/world-fair.jpg?foo1=bar&foo2=baz
+
+Root: /home/hulseme/public_html/images/uploads/world-fair.jpg
+
+NO DOMAIN
+
+Base: /images/uploads/
+
+Width: 854
+
+Height: 641
+
+Name: world-fair
+
+Extension: jpg
+
+Ratio: 1.332
+
+NOT FLASH
+
+bar
+
+baz
+
+==========================
+
+And this:
+
+==========================
+
+{exp:mah_sizeplus file="http://www.google.com/intl/en_ALL/images/logo.gif"}
+    
+    <p>URL: {sp_url}</p>
+    
+    <p>Root: {sp_root}</p>
+    
+    {if sp_domain != ''}
+        <p>Domain: {sp_domain}</p>
+    {if:else}
+        <p>NO DOMAIN</p>
+    {/if}
+    
+    <p>Base: {sp_base}</p>
+    
+    {if sp_width != ''}
+        <p>Width: {sp_width}</p>
+    {if:else}
+        <p>NO WIDTH</p>
+    {/if}
+    
+    {if sp_height != ''}
+        <p>Height: {sp_height}</p>
+    {if:else}
+        <p>NO HEIGHT</p>
+    {/if}
+    
+    <p>Name: {sp_name}</p>
+    
+    <p>Extension: {sp_ext}</p>
+    
+    {if sp_ratio > 0}
+        <p>Ratio: {sp_ratio}</p>
+    {if:else}
+        <p>RATIO <= 0</p>
+    {/if}
+    
+    {if sp_flash}
+        <p>Show Flash</p>
+    {if:else}
+        <p>NOT FLASH</p>
+    {/if}
+    
+    {if spq_foo1 != ''}
+        <p>{spq_foo1}</p>
+    {if:else}
+        <p>spq_foo1 NOT SET</p>
+    {/if}
+    
+    {if spq_foo2 == 'baz'}
+        <p>{spq_foo2}</p>
+    {if:else}
+        <p>spq_foo2 NOT BAZ</p>
+    {/if}
+    
+{/exp:mah_sizeplus}
+
+==========================
+
+... will output this:
+
+==========================
+
+URL: http://www.google.com/intl/en_ALL/images/logo.gif
+
+Root: http://www.google.com/intl/en_ALL/images/logo.gif
+
+Domain: http://www.google.com
+
+Base: /intl/en_ALL/images/
+
+Width: 276
+
+Height: 110
+
+Name: logo
+
+Extension: gif
+
+Ratio: 2.509
+
+NOT FLASH
+
+spq_foo1 NOT SET
+
+spq_foo2 NOT BAZ
+
+==========================
