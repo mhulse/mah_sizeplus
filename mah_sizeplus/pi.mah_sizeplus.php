@@ -16,13 +16,13 @@ $plugin_info = array(
 // --------------------------------------------------------------------
 
 /**
- * Mah_x2html Class
+ * Mah_SizePlus Class
  * 
- * @package		ExpressionEngine
- * @category	Plugin
- * @author		Micky Hulse
- * @copyright	Copyright (c) 2010, Micky Hulse
- * @link		http://hulse.me/
+ * @package       ExpressionEngine
+ * @category      Plugin
+ * @author        Micky Hulse
+ * @copyright     Copyright (c) 2010, Micky Hulse
+ * @link          http://hulse.me/
  */
 
 class Mah_sizeplus
@@ -70,8 +70,8 @@ class Mah_sizeplus
 	/**
 	 * Constructor
 	 *
-	 * @access		public
-	 * @return		void
+	 * @access     public
+	 * @return     void
 	 */
 	
 	function Mah_sizeplus()
@@ -285,8 +285,8 @@ class Mah_sizeplus
 	 * 
 	 * Returns document root path.
 	 * 
-	 * @access		private
-	 * @return		string
+	 * @access     private
+	 * @return     string
 	 */
 	
 	function _doc_root()
@@ -301,9 +301,9 @@ class Mah_sizeplus
 	 * 
 	 * Checks is variable is set and is string.
 	 * 
-	 * @access		private
-	 * @param		string
-	 * @return		boolean
+	 * @access     private
+	 * @param      string
+	 * @return     boolean
 	 */
 	
 	function _str_check($x = NULL)
@@ -318,9 +318,9 @@ class Mah_sizeplus
 	 * 
 	 * Wrapper for PHP's getimagesize().
 	 * 
-	 * @access		private
-	 * @param		string
-	 * @return		string
+	 * @access     private
+	 * @param      string
+	 * @return     string
 	 */
 	
 	function _get_image_size($x = NULL)
@@ -342,9 +342,9 @@ class Mah_sizeplus
 	 * 
 	 * Wrapper for PHP's parse_url().
 	 * 
-	 * @access		private
-	 * @param		string
-	 * @return		array
+	 * @access     private
+	 * @param      string
+	 * @return     array
 	 */
 	
 	function _parse_url($x = NULL)
@@ -366,9 +366,9 @@ class Mah_sizeplus
 	 * 
 	 * Wrapper for PHP's parse_str().
 	 * 
-	 * @access		private
-	 * @param		string
-	 * @return		array
+	 * @access     private
+	 * @param      string
+	 * @return     array
 	 */
 	
 	function _parse_str($x = NULL)
@@ -386,9 +386,9 @@ class Mah_sizeplus
 	 * 
 	 * Returns file name and extension.
 	 * 
-	 * @access		private
-	 * @param		string
-	 * @return		array
+	 * @access     private
+	 * @param      string
+	 * @return     array
 	 */
 	
 	function _get_file_parts($x = NULL)
@@ -404,9 +404,9 @@ class Mah_sizeplus
 	 * Wrapper for PHP's dirname().
 	 * http://us2.php.net/manual/en/function.dirname.php#87637
 	 * 
-	 * @access		private
-	 * @param		string
-	 * @return		string
+	 * @access     private
+	 * @param      string
+	 * @return     string
 	 */
 	
 	function _safe_dir_name($x = NULL)
@@ -422,10 +422,10 @@ class Mah_sizeplus
 	 * Wrapper for PHP's round(), with precision support.
 	 * http://www.php.net/manual/en/function.round.php#86330
 	 * 
-	 * @access		private
-	 * @param		float
-	 * @param		integer
-	 * @return		float
+	 * @access     private
+	 * @param      float
+	 * @param      integer
+	 * @return     float
 	 */
 	
 	function _round_digits($x = NULL, $p = 0)
@@ -444,9 +444,9 @@ class Mah_sizeplus
 	 * Checks if variable a natural number.
 	 * Zero is often exclude from the natural numbers, that's why there's the second parameter.
 	 * 
-	 * @param		string/integer
-	 * @param		boolean
-	 * @return		boolean
+	 * @param      string/integer
+	 * @param      boolean
+	 * @return     boolean
 	 */
 	
 	function is_natural($x = NULL, $zero = FALSE)
@@ -463,8 +463,8 @@ class Mah_sizeplus
 	 * 
 	 * Plugin Usage.
 	 * 
-	 * @access		public
-	 * @return		string
+	 * @access     public
+	 * @return     string
 	 */
 	
 	function usage()
