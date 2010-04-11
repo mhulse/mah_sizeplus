@@ -116,7 +116,7 @@ class Mah_sizeplus {
 		// Debug?
 		// ----------------------------------
 		
-		$this->debug = ($this->EE->TMPL->fetch_param($this->prm_nms['debug']) == strtolower('yes')) ? TRUE : FALSE;
+		$this->debug = (strtolower($this->EE->TMPL->fetch_param($this->prm_nms['debug'])) == 'yes') ? TRUE : FALSE;
 		
 		// ----------------------------------
 		// Root path:
