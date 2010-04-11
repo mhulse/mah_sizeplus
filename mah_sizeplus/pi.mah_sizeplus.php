@@ -484,7 +484,7 @@ class Mah_sizeplus {
 	
 	function _round_digits($x = NULL, $p = 0)
 	{
-		if ($this->is_natural($x)) {
+		if ($this->_is_natural($x)) {
 			$p_factor = ($p == 0) ? 1 : pow(10, $p);
 			return round($x * $p_factor) / $p_factor;
 		}
@@ -498,12 +498,13 @@ class Mah_sizeplus {
 	 * Checks if variable a natural number.
 	 * Zero is often exclude from the natural numbers, that's why there's the second parameter.
 	 * 
+	 * @access     private
 	 * @param      string/integer
 	 * @param      boolean
 	 * @return     boolean
 	 */
 	
-	function is_natural($x = NULL, $zero = FALSE)
+	function _is_natural($x = NULL, $zero = FALSE)
 	{
 		return (((string) $x === (string) (int) $x) && (intval($x) < (($zero) ? 0 : 1))) ? FALSE : TRUE;
 	}
