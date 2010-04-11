@@ -25,8 +25,7 @@ $plugin_info = array(
  * @link          http://hulse.me/
  */
 
-class Mah_sizeplus
-{
+class Mah_sizeplus {
 	
 	//--------------------------------------------------------------------------
 	//
@@ -42,7 +41,6 @@ class Mah_sizeplus
 	//
 	//--------------------------------------------------------------------------
 	
-	var $flag = 0;
 	var $debug = FALSE;
 	var $prm_nms = array();
 	var $dflt_nms = array();
@@ -53,7 +51,7 @@ class Mah_sizeplus
 	var $domain = '';
 	var $path = '';
 	var $file_parts = array();
-	var $query = FALSE;
+	var $query = array();
 	var $base = '';
 	var $dimensions = array();
 	var $silent_fail = array(0, 0, 'mime' => '');
@@ -76,6 +74,11 @@ class Mah_sizeplus
 	
 	function Mah_sizeplus()
 	{
+		
+		# Performance Guidelines:
+		# http://expressionengine.com/public_beta/docs/development/guidelines/performance.html
+		# General Style and Syntax:
+		# http://expressionengine.com/public_beta/docs/development/guidelines/general.html
 		
 		// ----------------------------------
 		// Call super object:
@@ -119,21 +122,21 @@ class Mah_sizeplus
 		// Root path:
 		// ----------------------------------
 		
-		$this->root_path = ($this->_str_check($this->root_path)) ? $this->root_path : $this->_doc_root();
-		if ( ! $this->_str_check($this->root_path)) $this->flag = 1;
+		$this->root_path = ($this->_str_check($this->root_path) === TRUE) ? $this->root_path : $this->_doc_root();
 		
-		if ( ! $this->flag) {
+		if ($this->_str_check($this->root_path) === TRUE)
+		{
 			
 			// ----------------------------------
 			// File:
 			// ----------------------------------
 			
 			$this->file = $this->EE->TMPL->fetch_param($this->prm_nms['file']);
-			if ( ! $this->_str_check($this->file)) $this->flag = 1;
 			
-			if ( ! $this->flag) {
+			if ($this->_str_check($this->file) === TRUE)
+			{
 				
-				$this->file = str_replace("\\", "/", $this->file);
+				if (strpos($this->file, '\\') !== FALSE) $this->file = str_replace('\\', '/', $this->file);
 				$this->file = $this->EE->functions->remove_double_slashes($this->file);
 				
 				// ----------------------------------
@@ -141,54 +144,54 @@ class Mah_sizeplus
 				// ----------------------------------
 				
 				$this->url_parts = $this->_parse_url($this->file);
-				if ( ! $this->url_parts) $this->flag = 1;
 				
-				if ( ! $this->flag) {
+				if ($this->url_parts !== FALSE)
+				{
 					
 					// ----------------------------------
 					// Remote?
 					// ----------------------------------
 					 
-					$this->remote = (stristr($this->file, 'http')) ? TRUE : FALSE;
+					$this->remote = (strpos($this->file, 'http') !== FALSE) ? TRUE : FALSE;
 					
 					// ----------------------------------
 					// Absolute or relative path?
 					// ----------------------------------
 					
-					$this->path = ($this->remote) ? $this->file : $this->root_path . $this->url_parts['path'];
-					
-					// ----------------------------------
-					// Domain?
-					// ----------------------------------
-					
-					if ($this->remote) {
-						
-						# Protocol:
-						$this->domain = (isset($this->url_parts['scheme'])) ? $this->url_parts['scheme'] : 'http'; // "http" by default.
-						$this->domain .= '://';
-						# Username & password:
-						if ((isset($this->url_parts['user'])) && (isset($this->url_parts['pass']))) $this->domain .= $this->url_parts['user'] . ':' . $this->url_parts['pass'] . '@'; // http://username:password@assets.registerguard.com
-						# Host name:
-						$this->domain .= $this->url_parts['host'];
-						
-					}
+					$this->path = ($this->remote === TRUE) ? $this->file : $this->root_path . $this->url_parts['path'];
 					
 					// ----------------------------------
 					// Validation:
 					// ----------------------------------
 					
-					if (( ! $this->remote) && ( ! is_file($this->path))) $this->flag = 1;
-					
-					if ( ! $this->flag) {
+					if (($this->remote === TRUE) || (is_file($this->path) === TRUE))
+					{
+						
+						// ----------------------------------
+						// Domain?
+						// ----------------------------------
+						
+						if ($this->remote === TRUE)
+						{
+							
+							# Protocol:
+							$this->domain = (isset($this->url_parts['scheme'])) ? $this->url_parts['scheme'] : 'http'; // "http" by default.
+							$this->domain .= '://';
+							# Username & password:
+							if ((isset($this->url_parts['user'])) && (isset($this->url_parts['pass']))) $this->domain .= $this->url_parts['user'] . ':' . $this->url_parts['pass'] . '@'; // http://username:password@assets.registerguard.com
+							# Host name:
+							$this->domain .= $this->url_parts['host'];
+							
+						}
 						
 						// ----------------------------------
 						// File name & extension:
 						// ----------------------------------
 						
 						$this->file_parts = $this->_get_file_parts($this->file);
-						if ( ! $this->file_parts) $this->flag = 1;
 						
-						if ( ! $this->flag) {
+						if ($this->file_parts !== FALSE)
+						{
 							
 							// ----------------------------------
 							// Query string?
@@ -207,7 +210,7 @@ class Mah_sizeplus
 							// ----------------------------------
 							
 							$this->dimensions = $this->_get_image_size($this->path);
-							if ( ! $this->dimensions) $this->dimensions = $this->silent_fail;
+							if ($this->dimensions === FALSE) $this->dimensions = $this->silent_fail;
 							
 							// ----------------------------------
 							// Aspect ratio:
@@ -231,7 +234,13 @@ class Mah_sizeplus
 							$this->cond[$this->dflt_nms['flash']] = ($this->dimensions['mime'] == 'application/x-shockwave-flash') ? TRUE : FALSE;
 							
 							# User-defined:
-							if ($this->query) foreach($this->query as $key => $val) { $this->cond[$this->append_query . $key] = ($val) ? $val : FALSE; }
+							if (($this->query !== FALSE) && ($this->_arr_check($this->query) === TRUE))
+							{
+								foreach($this->query as $key => $val)
+								{
+									$this->cond[$this->append_query . $key] = ($val) ? $val : FALSE;
+								}
+							}
 							
 							// ----------------------------------
 							// Process conditionals:
@@ -243,8 +252,8 @@ class Mah_sizeplus
 							// Process plugin single variables:
 							// ----------------------------------
 							
-							foreach($this->EE->TMPL->var_single as $key => $val) {
-								
+							foreach($this->EE->TMPL->var_single as $key => $val)
+							{
 								if ($key == $this->dflt_nms['url']) { $this->EE->TMPL->tagdata = $this->EE->TMPL->swap_var_single($val, $this->file, $this->EE->TMPL->tagdata); }
 								if ($key == $this->dflt_nms['root']) { $this->EE->TMPL->tagdata = $this->EE->TMPL->swap_var_single($val, $this->path, $this->EE->TMPL->tagdata); }
 								if ($key == $this->dflt_nms['domain']) { $this->EE->TMPL->tagdata = $this->EE->TMPL->swap_var_single($val, $this->domain, $this->EE->TMPL->tagdata); }
@@ -254,10 +263,18 @@ class Mah_sizeplus
 								if ($key == $this->dflt_nms['name']) { $this->EE->TMPL->tagdata = $this->EE->TMPL->swap_var_single($val, $this->file_parts[0], $this->EE->TMPL->tagdata); }
 								if ($key == $this->dflt_nms['ext']) { $this->EE->TMPL->tagdata = $this->EE->TMPL->swap_var_single($val, $this->file_parts[1], $this->EE->TMPL->tagdata); }
 								if ($key == $this->dflt_nms['ratio']) { $this->EE->TMPL->tagdata = $this->EE->TMPL->swap_var_single($val, $this->ratio, $this->EE->TMPL->tagdata); }
-								
-								# User-defined:
-								if ($this->query) foreach($this->query as $k => $v) { if ($key == $this->append_query . $k) { $this->EE->TMPL->tagdata = $this->EE->TMPL->swap_var_single($val, $v, $this->EE->TMPL->tagdata); } }
-								
+							}
+							
+							# User-defined:
+							if (($this->query !== FALSE) && ($this->_arr_check($this->query) === TRUE))
+							{
+								foreach($this->EE->TMPL->var_single as $key => $val)
+								{
+									foreach($this->query as $k => $v)
+									{
+										if ($key == $this->append_query . $k) $this->EE->TMPL->tagdata = $this->EE->TMPL->swap_var_single($val, $v, $this->EE->TMPL->tagdata);
+									}
+								}
 							}
 							
 							// ----------------------------------
@@ -266,15 +283,35 @@ class Mah_sizeplus
 							
 							$this->return_data = $this->EE->TMPL->tagdata;
 							
-						} else { $this->return_data = ($this->debug) ? $this->er_prefix . $this->er_file_parts : ''; } // $this->file_parts
+						}
+						else
+						{
+							$this->return_data = ($this->debug) ? $this->er_prefix . $this->er_file_parts : ''; // $this->file_parts
+						}
 						
-					} else { $this->return_data = ($this->debug) ? $this->er_prefix . $this->er_not_file : ''; } // $this->remote, $this->path
+					}
+					else
+					{
+						$this->return_data = ($this->debug) ? $this->er_prefix . $this->er_not_file : ''; // $this->remote, $this->path
+					}
 						
-				} else { $this->return_data = ($this->debug) ? $this->er_prefix . $this->er_url_info : ''; } // $this->url_parts
+				}
+				else
+				{
+					$this->return_data = ($this->debug) ? $this->er_prefix . $this->er_url_info : ''; // $this->url_parts
+				}
 				
-			} else { $this->return_data = ($this->debug) ? $this->er_prefix . $this->er_file : ''; } // $this->file
+			}
+			else
+			{
+				$this->return_data = ($this->debug) ? $this->er_prefix . $this->er_file : ''; // $this->file
+			}
 			
-		} else { $this->return_data = ($this->debug) ? $this->er_prefix . $this->er_root : ''; } // $this->root_path
+		}
+		else
+		{
+			$this->return_data = ($this->debug) ? $this->er_prefix . $this->er_root : ''; // $this->root_path
+		}
 		
 	}
 	
@@ -309,6 +346,23 @@ class Mah_sizeplus
 	function _str_check($x = NULL)
 	{
 		return (($x !== NULL) && (isset($x)) && (is_string($x)) && (strlen(trim($x)))) ? TRUE : FALSE;
+	}
+	
+	// --------------------------------------------------------------------
+	
+	/**
+	 * Check array validity
+	 * 
+	 * Checks array and tests for any key values.
+	 * 
+	 * @access     private
+	 * @param      array
+	 * @return     boolean
+	 */
+	
+	function _arr_check($x = NULL)
+	{
+		return (($x !== NULL) && (is_array($x)) && (count($x) > 0)) ? TRUE : FALSE;
 	}
 	
 	// --------------------------------------------------------------------
@@ -451,9 +505,7 @@ class Mah_sizeplus
 	
 	function is_natural($x = NULL, $zero = FALSE)
 	{
-		$num = ((string)$x === (string)(int)$x);
-		$base = ($zero) ? 0 : 1;
-		return ($num && intval($x) < $base) ? FALSE : TRUE;
+		return (((string) $x === (string) (int) $x) && (intval($x) < (($zero) ? 0 : 1))) ? FALSE : TRUE;
 	}
 	
 	// --------------------------------------------------------------------
