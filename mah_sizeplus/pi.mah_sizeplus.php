@@ -137,7 +137,7 @@ class Mah_sizeplus {
 			{
 				
 				if (strpos($this->file, '\\') !== FALSE) $this->file = str_replace('\\', '/', $this->file);
-				$this->file = $this->EE->functions->remove_double_slashes($this->file);
+				$this->file = reduce_double_slashes($this->file);
 				
 				// ----------------------------------
 				// URL info:
